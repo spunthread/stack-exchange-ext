@@ -5,12 +5,12 @@
   "manifest_version": 3,
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["stackexchange.js"]
-    },
-    {
       "matches": ["https://chatgpt.com/*"],
       "js": ["chatgpt.js"]
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["stackexchange.js"]
     }
   ],
   "icons": {

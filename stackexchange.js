@@ -1,18 +1,12 @@
 console.log("Content Script Injected");
 
-function logChanges(_, observer) {
+new MutationObserver((_, observer) => {
   const el = document.querySelector("#onetrust-consent-sdk");
-
   if (el) {
+    el.remove();
     observer.disconnect();
-    el?.remove();
   }
-}
-
-const observerOptions = {
+}).observe(document.body, {
   childList: true,
   subtree: true,
-};
-
-const observer = new MutationObserver(logChanges);
-observer.observe(document.body, observerOptions);
+});

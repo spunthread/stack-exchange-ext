@@ -1,17 +1,12 @@
 console.log("Content Script Injected");
 
-function logChanges(_, observer) {
+new MutationObserver((_, observer) => {
   const el = document.querySelector('div[role="dialog"] a[href="#"]');
   if (el) {
     el.click();
     observer.disconnect();
   }
-}
-
-const observerOptions = {
+}).observe(document.body, {
   childList: true,
   subtree: true,
-};
-
-const observer = new MutationObserver(logChanges);
-observer.observe(document.body, observerOptions);
+});
