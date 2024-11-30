@@ -1,12 +1,16 @@
 {
   "name": "stack-exchange-ext",
-  "description": "Removes Anoying Cookie Banner From Every Stack Exchange Network Websites.",
+  "description": "Removes Anoying Stuff From Websites I frequently Visit.",
   "version": "1.0",
   "manifest_version": 3,
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "js": ["stackexchange.js"]
+    },
+    {
+      "matches": ["https://chatgpt.com/*"],
+      "js": ["chatgpt.js"]
     }
   ],
   "icons": {
