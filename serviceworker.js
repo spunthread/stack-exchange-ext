@@ -1,19 +1,20 @@
 const { runtime, storage, tabs } = chrome;
 
-runtime.onInstalled.addListener(async () => {
-  await storage.local.set({ iid: 0, reload: false });
-  storage.local.onChanged.addListener(onStorageChanged);
-});
+runtime.onInstalled.addListener(async () => await storage.local.set({ iid: 0, reload: false }));
+storage.local.onChanged.addListener(onStorageChanged);
 
 async function onStorageChanged(changes) {
   // console.log("storage changed", changes);
-  const { reload } = changes;
-  if (reload.newValue) {
-    const iid = setInterval(() => reloadCurrentPage(), 2e3);
-    await storage.local.set({ iid });
-  } else {
-    const { iid } = await storage.local.get("iid");
-    clearInterval(iid);
+  if (changes.reload) {
+    if (changes.reload.newValue) {
+      const iid = setInterval(() => reloadCurrentPage(), 2e3);
+      await storage.local.set({ iid });
+      // console.log("iid updated", iid);
+    } else {
+      const { iid } = await storage.local.get("iid");
+      clearInterval(iid);
+      // console.log("iid cleared", iid);
+    }
   }
 }
 
@@ -23,8 +24,10 @@ async function reloadCurrentPage() {
     currentWindow: true,
   });
 
+  // console.log(activeTab, activeTab?.id);
+
   if (activeTab && activeTab.id) {
-    tabs.reload(activeTab.id);
+    await tabs.reload(activeTab.id);
   } else {
     console.warn("No active tab found.");
   }
