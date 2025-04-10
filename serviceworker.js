@@ -1,13 +1,14 @@
 const { runtime, storage, tabs } = chrome;
 
-runtime.onInstalled.addListener(async () => await storage.local.set({ iid: 0, reload: false }));
+runtime.onInstalled.addListener(async () => await storage.local.set({ iid: 0, tsms: 3e3, reload: false }));
 storage.local.onChanged.addListener(onStorageChanged);
 
 async function onStorageChanged(changes) {
   // console.log("storage changed", changes);
   if (changes.reload) {
     if (changes.reload.newValue) {
-      const iid = setInterval(() => reloadCurrentPage(), 2e3);
+      const { tsms = 2e3 } = await storage.local.get("tsms");
+      const iid = setInterval(() => reloadCurrentPage(), tsms);
       await storage.local.set({ iid });
       // console.log("iid updated", iid);
     } else {
